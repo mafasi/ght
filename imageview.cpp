@@ -7,6 +7,7 @@
 #include <QPixmap>
 #include <QImage>
 #include "optionsview.h"
+#include <QDebug>
 
 
 ImageView::ImageView(Algorithm& alg, QWidget *parent) :
@@ -47,6 +48,9 @@ void ImageView::keyPressEvent(QKeyEvent *event)
             _options->show();
         else
             _options->hide();
+        break;
+    case Qt::Key_Escape:
+        QApplication::exit();
     default:
         break;
     }
@@ -59,27 +63,30 @@ void ImageView::viewImageB(const cv::Mat& image)
 
 void ImageView::viewImage(Panel panel, const cv::Mat& mat)
 {
-    cv::imshow("test", mat);
-    cv::waitKey();
-    cv::destroyAllWindows();
+    qDebug() << "ImageView::viewImage(): dims: " << mat.dims << "cannels:" << mat.channels();
     const uchar *qImageBuffer = (const uchar*)mat.data;
     // Create QImage with same dimensions as input Mat
-    QImage img (qImageBuffer, mat.cols, mat.rows, mat.step, QImage::Format_Indexed8);
+    QImage img;
+    if (mat.channels() == 1)
+        img = QImage (qImageBuffer, mat.cols, mat.rows, mat.step, QImage::Format_Indexed8);
+    else if (mat.channels() == 3)
+    {
+        img = QImage (qImageBuffer, mat.cols, mat.rows, mat.step, QImage::Format_RGB888);
+        img = img.rgbSwapped();
+    }
     switch (panel)
     {
     case A:
-        _ui->imageA->setPixmap(QPixmap::fromImage(img.rgbSwapped()));
+        _ui->imageA->setPixmap(QPixmap::fromImage(img));
         break;
     case B:
-        _ui->imageB->setPixmap(QPixmap::fromImage(img.rgbSwapped()));
+        _ui->imageB->setPixmap(QPixmap::fromImage(img));
         break;
     default:
+        qDebug() << "ImageView::viewImage(): unexpected panel.";
         abort();
         break;
     }
-    cv::imshow("test2", mat);
-    cv::waitKey();
-    cv::destroyAllWindows();
 }
 
 cv::Mat ImageView::loadFileFromFileOpenDialog()

@@ -32,14 +32,29 @@ void Algorithm::setImage(cv::Mat mat)
 
 void Algorithm::setParameters(std::vector<DoubleParamter> parameters)
 {
+    if (_ght)
+        delete _ght;
+    _ght = cv::createGeneralizedHoughBallard();
     foreach (DoubleParamter parameter, parameters) {
         switch (std::get<Type> (parameter))
         {
         case ParameterType::MinDist:
             _ght->setMinDist(std::get<Default> (parameter));
             break;
+        case ParameterType::VotesThreshold:
+            _ght->setVotesThreshold(std::get<Default>(parameter));
+            break;
+        case ParameterType::MaxBufferSize:
+            _ght->setMaxBufferSize(std::get<Default>(parameter));
+            break;
+        case ParameterType::Dp:
+            _ght->setDp(std::get<Default>(parameter));
+            break;
+        case ParameterType::Levels:
+            _ght->setLevels(std::get<Default>(parameter));
+            break;
         default:
-            qDebug() << "Algorithm::setParamters(): unknown type";
+            qDebug() << "Algorithm::setParamters(): unknown type: "  << std::get<Type> (parameter);
         }
     }
 }
@@ -71,9 +86,6 @@ void Algorithm::detect()
        line(out, pts[2], pts[3], cv::Scalar(0, 0, 255), 3);
        line(out, pts[3], pts[0], cv::Scalar(0, 0, 255), 3);
     }
-    imshow("out", out);
     emit done(out);
-    cv::waitKey();
-
 }
 

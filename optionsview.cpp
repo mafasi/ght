@@ -5,6 +5,7 @@
 #include <QVBoxLayout>
 #include <QKeyEvent>
 #include <QDebug>
+#include <QPushButton>
 
 OptionsView::OptionsView(Algorithm &algorithm, QWidget *parent) :
     QWidget(parent),
@@ -60,6 +61,12 @@ void OptionsView::initialize()
         layout->addWidget(widget);
         connect(widget, SIGNAL(valueChanged(int,ParameterType)), this, SLOT(in(int,ParameterType)));
     }
+
+    // buttons
+    QPushButton* detectButton = new QPushButton(this);
+    detectButton->setText("Detect");
+    connect(detectButton, SIGNAL(clicked()), &_alg, SLOT(detect()));
+    layout->addWidget(detectButton);
     setLayout(layout);
 
 }

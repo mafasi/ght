@@ -46,7 +46,7 @@ public slots:
     void detect();
 
 private:
-    cv::Ptr<cv::GeneralizedHough>   _ght;
+    cv::Ptr<cv::GeneralizedHoughBallard>   _ght;
     cv::Mat                         _templateImage;
     cv::Mat                         _detectImage;
     std::vector<DoubleParamter>     _parameters;
