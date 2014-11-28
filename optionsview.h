@@ -17,21 +17,20 @@ class OptionsView : public QWidget
     Q_OBJECT
 
 public:
-    explicit OptionsView(Algorithm& algorithm, QWidget *parent = 0);
+    explicit OptionsView(QObject *parent = 0);
     ~OptionsView();
+
+    void initialize(std::vector<DoubleParameter> parameters);
 
     void keyPressEvent(QKeyEvent *event);
 
-private slots:
-    void in(int value, ParameterType type);
+signals:
+    void out(std::vector<DoubleParameter> parameter);
+
 
 private:
-    void initialize();
-
-private:
-    Ui::OptionsView *ui;
-    Algorithm& _alg;
-    const std::vector<DoubleParamter>& _currentParameter;
+    Ui::OptionsView*    ui;
+    QObject*            _parent;
 };
 
 #endif // GUI_H

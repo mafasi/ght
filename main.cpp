@@ -19,9 +19,8 @@ int main(int argc, char *argv[])
     qDebug() << "working dir: " << QDir::currentPath();
     qDebug() << "executable dir: " << QCoreApplication::applicationDirPath();
 
-    Algorithm alg;
 
-    ImageView imageView (alg);
+    ImageView imageView;
     imageView.show();
 
     a.exec();

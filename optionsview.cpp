@@ -7,14 +7,11 @@
 #include <QDebug>
 #include <QPushButton>
 
-OptionsView::OptionsView(Algorithm &algorithm, QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::OptionsView),
-    _alg(algorithm),
-    _currentParameter(algorithm.parameters())
+OptionsView::OptionsView(QObject *parent) :
+    _parent(parent),
+    ui(new Ui::OptionsView)
 {
     ui->setupUi(this);
-    initialize();
 }
 
 OptionsView::~OptionsView()
@@ -30,43 +27,27 @@ void OptionsView::keyPressEvent(QKeyEvent *event)
         this->hide();
         break;
     case Qt::Key_D:
-        _alg.detect();
+        //_alg.detect();
         break;
     default:
         break;
     }
 }
 
-void OptionsView::in(int value, ParameterType type)
-{
-    qDebug() << "OptionsView::in(int value, ParameterType type)" << value << ", " << type;
-    foreach (DoubleParamter parameter, _currentParameter)
-    {
-        if (std::get<Type>(parameter) == type)
-            std::get<Default>(parameter) = value;
-    }
-    _alg.setParameters(_currentParameter);
-}
 
-void OptionsView::initialize()
+void OptionsView::initialize(std::vector<DoubleParameter> parameters)
 {
     QVBoxLayout* layout = new QVBoxLayout();
     layout->setMargin(0);
     layout->setContentsMargins(0, 0, 0, 0);
 
-    foreach (DoubleParamter parameter, _currentParameter)
+    foreach (DoubleParameter parameter, parameters)
     {
         LabelSliderEditWidget* widget = new LabelSliderEditWidget(this);
         widget->configure(parameter);
         layout->addWidget(widget);
-        connect(widget, SIGNAL(valueChanged(int,ParameterType)), this, SLOT(in(int,ParameterType)));
+        connect(widget, SIGNAL(valueChanged(int,ParameterType)), _parent, SLOT(inParameter(int,ParameterType)));
     }
-
-    // buttons
-    QPushButton* detectButton = new QPushButton(this);
-    detectButton->setText("Detect");
-    connect(detectButton, SIGNAL(clicked()), &_alg, SLOT(detect()));
-    layout->addWidget(detectButton);
     setLayout(layout);
 
 }

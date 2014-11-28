@@ -20,7 +20,7 @@ signals:
     void valueChanged(int value, ParameterType type);
 
 public slots:
-    void configure(DoubleParamter paramter);
+    void configure(DoubleParameter paramter);
     void update(int value);
 
 private:

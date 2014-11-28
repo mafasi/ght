@@ -14,7 +14,7 @@ LabelSliderEditWidget::~LabelSliderEditWidget()
     delete _ui;
 }
 
-void LabelSliderEditWidget::configure(DoubleParamter paramter)
+void LabelSliderEditWidget::configure(DoubleParameter paramter)
 {
     _ui->slider->setMinimum(std::get<Minimum>(paramter));
     _ui->slider->setMaximum(std::get<Maximum>(paramter));

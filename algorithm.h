@@ -27,14 +27,13 @@ enum {
 };
 
 
-typedef std::tuple<ParameterType, std::string, double, double, double> DoubleParamter;
+typedef std::tuple<ParameterType, std::string, double, double, double> DoubleParameter;
 
 class Algorithm : public QObject
 {
     Q_OBJECT
 public:
     explicit Algorithm(QObject *parent = 0);
-    const std::vector<DoubleParamter> &parameters() const;
 
 signals:
     void done(cv::Mat image);
@@ -42,14 +41,15 @@ signals:
 public slots:
     void setTemplate(cv::Mat mat);
     void setImage(cv::Mat mat);
-    void setParameters(std::vector<DoubleParamter> parameters);
+    void setParameters(const std::vector<DoubleParameter> &parameters);
     void detect();
 
+    static void printParameters(const std::vector<DoubleParameter>& parameters);
+
 private:
-    cv::Ptr<cv::GeneralizedHoughBallard>   _ght;
-    cv::Mat                         _templateImage;
-    cv::Mat                         _detectImage;
-    std::vector<DoubleParamter>     _parameters;
+    cv::Ptr<cv::GeneralizedHoughBallard>    _ght;
+    cv::Mat                                 _templateImage;
+    cv::Mat                                 _detectImage;
 
 };
 

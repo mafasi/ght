@@ -8,16 +8,25 @@
 #include <QImage>
 #include "optionsview.h"
 #include <QDebug>
+#include <vector>
 
 
-ImageView::ImageView(Algorithm& alg, QWidget *parent) :
+ImageView::ImageView(QWidget *parent) :
     QWidget(parent),
     _ui(new Ui::ImageView),
-    _options(new OptionsView(alg)),
-    _alg(alg)
+    _options(new OptionsView(this)),
+    _parameters{
+        DoubleParameter(ParameterType::MinDist, "Minimal Distance", 1.0, 100.0, 10.0),
+        DoubleParameter(ParameterType::Levels, "levels", 36.0, 3600.0, 360.0),
+        DoubleParameter(ParameterType::MaxBufferSize, "Max Buffer Size", 100.0, 10000.0, 1000.0),
+        DoubleParameter(ParameterType::Dp, "Dp", 1.0, 100.0, 10.0),
+        DoubleParameter(ParameterType::VotesThreshold, "Votes Threshold", 1.0, 255.0, 30.0)
+    }
 {
     _ui->setupUi(this);
-    connect(&_alg, SIGNAL(done(cv::Mat)), this, SLOT(viewImageB(cv::Mat)));
+    //connect(&_alg, SIGNAL(done(cv::Mat)), this, SLOT(viewImageB(cv::Mat)));
+    connect(_ui->pushButton, SIGNAL(clicked()), this, SLOT(detect()));
+    _options->initialize(_parameters);
 }
 
 ImageView::~ImageView()
@@ -30,18 +39,15 @@ void ImageView::keyPressEvent(QKeyEvent *event)
 {
     switch (event->key()) {
     case Qt::Key_T:  // load template
-    {
-        cv::Mat mat = loadFileFromFileOpenDialog();
-        _alg.setTemplate(mat);
-        viewImage(Panel::A, mat);
-    }
+        _template = loadFileFromFileOpenDialog();
+        viewImage(Panel::A, _template);
         break;
     case Qt::Key_L:  // Load Image
-    {
-        cv::Mat mat = loadFileFromFileOpenDialog();
-        _alg.setImage(mat);
-        viewImage(Panel::B, mat);
-    }
+        _image = loadFileFromFileOpenDialog();
+        viewImage(Panel::B, _image);
+        break;
+    case Qt::Key_D:
+        detect();
         break;
     case Qt::Key_O: //options
         if (_options->isHidden())
@@ -59,6 +65,26 @@ void ImageView::keyPressEvent(QKeyEvent *event)
 void ImageView::viewImageB(const cv::Mat& image)
 {
     viewImage(Panel::B, image);
+}
+
+void ImageView::detect()
+{
+    Algorithm ght;
+    connect(&ght, SIGNAL(done(cv::Mat)), this, SLOT(viewImageB(cv::Mat)));
+    ght.setTemplate(_template);
+    ght.setParameters(_parameters);
+    ght.setImage(_image);
+    ght.detect();
+}
+
+void ImageView::inParameter(int value, ParameterType type)
+{
+    std::for_each (_parameters.begin(), _parameters.end(), [type, value](DoubleParameter& parameter)
+    {
+        if (std::get<Type>(parameter) == type)
+            std::get<Default>(parameter) = value;
+    });
+
 }
 
 void ImageView::viewImage(Panel panel, const cv::Mat& mat)
