@@ -54,9 +54,20 @@ void GHTAlgorithm::detect()
         cv::Mat edges;
         cv::Mat dx; cv::Mat dy;
         calcEdges(_detectImage, edges, dx, dy);
-        //cv::Mat votes;
+
         cv::imshow("edges", edges);
-        _ght->detect(edges, dx, dy, positions);
+        cv::imshow("dx", dx);
+        cv::imshow("dy", dy);
+        cv::waitKey();
+        cv::destroyAllWindows();
+
+        cv::Mat votes;
+
+        _ght->detect(edges, dx, dy, positions, votes);
+
+        cv::imshow("votes", votes);
+        cv::waitKey();
+        cv::destroyAllWindows();
 
         std::cout << "Detected positions: " << positions.size() << std::endl;
 
@@ -98,8 +109,8 @@ using namespace cv;
 void GHTAlgorithm::calcEdges(cv::InputArray _src, cv::Mat& edges, cv::Mat& dx, cv::Mat& dy)
 {
 
-    int cannyLowThresh_ = 50;
-    int cannyHighThresh_ = 100;
+    int cannyLowThresh_ = 60;
+    int cannyHighThresh_ = 90;
     Mat src = _src.getMat();
 
     CV_Assert( src.type() == CV_8UC1 );

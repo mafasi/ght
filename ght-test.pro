@@ -7,14 +7,12 @@
 QT       += core gui widgets
 
 TARGET = ght-test
-CONFIG   -= console
-CONFIG   -= app_bundle
+CONFIG -= console
+CONFIG -= app_bundle
 CONFIG += c++11
 CONFIG += precompile_header
 
-
 TEMPLATE = app
-
 
 SOURCES += main.cpp \
     labelslidereditwidget.cpp \

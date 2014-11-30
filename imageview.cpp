@@ -10,7 +10,7 @@ ImageView::ImageView(QWidget *parent) :
     _ui(new Ui::ImageView),
     _options(new OptionsView(this)),
     _parameters{
-        DoubleParameter(ParameterType::MinDist, "Minimal Distance", 1.0, 100.0, 10.0),
+        DoubleParameter(ParameterType::MinDist, "Minimal Distance", 0.0, 100.0, 10.0),
         DoubleParameter(ParameterType::Levels, "levels", 36.0, 3600.0, 360.0),
         DoubleParameter(ParameterType::MaxBufferSize, "Max Buffer Size", 100.0, 10000.0, 1000.0),
         DoubleParameter(ParameterType::Dp, "Dp", 1.0, 100.0, 10.0),
