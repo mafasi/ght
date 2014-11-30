@@ -10,13 +10,15 @@ TARGET = ght-test
 CONFIG   -= console
 CONFIG   -= app_bundle
 CONFIG += c++11
+CONFIG += precompile_header
+
 
 TEMPLATE = app
 
 
 SOURCES += main.cpp \
     labelslidereditwidget.cpp \
-    algorithm.cpp \
+    ghtalgorithm.cpp \
     imageview.cpp \
     optionsview.cpp
 
@@ -30,6 +32,8 @@ FORMS += \
 
 HEADERS += \
     labelslidereditwidget.h \
-    algorithm.h \
+    ghtalgorithm.h \
     imageview.h \
     optionsview.h
+
+PRECOMPILED_HEADER = precomp.h

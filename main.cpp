@@ -1,15 +1,6 @@
-#include <QApplication>
-#include <QDir>
-#include <QDebug>
+#include "precomp.h"
 
-#include <vector>
-#include <iostream>
-
-#include <opencv2/opencv.hpp>
-
-#include "optionsview.h"
 #include "imageview.h"
-#include "algorithm.h"
 
 int main(int argc, char *argv[])
 {

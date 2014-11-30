@@ -1,23 +1,12 @@
 #ifndef IMAGEVIEW_H
 #define IMAGEVIEW_H
 
-#include <QWidget>
-
-#include <opencv2/opencv.hpp>
-#include "algorithm.h"
+#include "precomp.h"
 
 namespace Ui {
 class ImageView;
 }
 
-class QKeyEvent;
-class Algorithm;
-class OptionsView;
-
-enum Panel {
-    A,
-    B
-};
 
 class ImageView : public QWidget
 {

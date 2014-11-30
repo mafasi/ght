@@ -1,25 +1,24 @@
-#include "algorithm.h"
-#include <QDebug>
+#include "ghtalgorithm.h"
 
-Algorithm::Algorithm(QObject *parent) :
+GHTAlgorithm::GHTAlgorithm(QObject *parent) :
     QObject(parent)
 {
     _ght = cv::createGeneralizedHoughBallard();
 }
 
-void Algorithm::setTemplate(cv::Mat mat)
+void GHTAlgorithm::setTemplate(cv::Mat mat, cv::Point center)
 {
-    _ght->setTemplate(_templateImage = mat);
+    _ght->setTemplate(_templateImage = mat, center);
 }
 
-void Algorithm::setImage(cv::Mat mat)
+void GHTAlgorithm::setImage(cv::Mat mat)
 {
     _detectImage = mat;
 }
 
-void Algorithm::setParameters(const std::vector<DoubleParameter> &parameters)
+void GHTAlgorithm::setParameters(const std::vector<DoubleParameter> &parameters)
 {
-    Algorithm::printParameters(parameters);
+    GHTAlgorithm::printParameters(parameters);
     foreach (DoubleParameter parameter, parameters) {
         switch (std::get<Type> (parameter))
         {
@@ -46,12 +45,18 @@ void Algorithm::setParameters(const std::vector<DoubleParameter> &parameters)
 
 
 
-void Algorithm::detect()
+void GHTAlgorithm::detect()
 {
     std::vector<cv::Vec4f> positions;
     try {
-        _ght->detect(_detectImage, positions);
+        //_ght->detect(_detectImage, positions);
 
+        cv::Mat edges;
+        cv::Mat dx; cv::Mat dy;
+        calcEdges(_detectImage, edges, dx, dy);
+        //cv::Mat votes;
+        cv::imshow("edges", edges);
+        _ght->detect(edges, dx, dy, positions);
 
         std::cout << "Detected positions: " << positions.size() << std::endl;
 
@@ -80,12 +85,28 @@ void Algorithm::detect()
     }
 }
 
-void Algorithm::printParameters(const std::vector<DoubleParameter> &parameters)
+void GHTAlgorithm::printParameters(const std::vector<DoubleParameter> &parameters)
 {
     qDebug() << "----------------";
     foreach (DoubleParameter parameter, parameters)
         qDebug() << QString::fromStdString(std::get<Description>(parameter)) << "=" << QString::number(std::get<Default>(parameter)) ;
     qDebug() << "----------------";
 
+}
+
+using namespace cv;
+void GHTAlgorithm::calcEdges(cv::InputArray _src, cv::Mat& edges, cv::Mat& dx, cv::Mat& dy)
+{
+
+    int cannyLowThresh_ = 50;
+    int cannyHighThresh_ = 100;
+    Mat src = _src.getMat();
+
+    CV_Assert( src.type() == CV_8UC1 );
+    CV_Assert( cannyLowThresh_ > 0 && cannyLowThresh_ < cannyHighThresh_ );
+
+    Canny(src, edges, cannyLowThresh_, cannyHighThresh_);
+    Sobel(src, dx, CV_32F, 1, 0);
+    Sobel(src, dy, CV_32F, 0, 1);
 }
 

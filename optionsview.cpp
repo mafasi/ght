@@ -1,22 +1,18 @@
 #include "optionsview.h"
 #include "ui_optionsview.h"
-#include "labelslidereditwidget.h"
 
-#include <QVBoxLayout>
-#include <QKeyEvent>
-#include <QDebug>
-#include <QPushButton>
+#include "labelslidereditwidget.h"
 
 OptionsView::OptionsView(QObject *parent) :
     _parent(parent),
-    ui(new Ui::OptionsView)
+    _ui(new Ui::OptionsView)
 {
-    ui->setupUi(this);
+    _ui->setupUi(this);
 }
 
 OptionsView::~OptionsView()
 {
-    delete ui;
+    delete _ui;
 }
 
 void OptionsView::keyPressEvent(QKeyEvent *event)
@@ -27,7 +23,7 @@ void OptionsView::keyPressEvent(QKeyEvent *event)
         this->hide();
         break;
     case Qt::Key_D:
-        //_alg.detect();
+        emit detect();
         break;
     default:
         break;
@@ -49,5 +45,6 @@ void OptionsView::initialize(std::vector<DoubleParameter> parameters)
         connect(widget, SIGNAL(valueChanged(int,ParameterType)), _parent, SLOT(inParameter(int,ParameterType)));
     }
     setLayout(layout);
+    connect(this, SIGNAL(detect()), _parent, SLOT(detect()));
 
 }

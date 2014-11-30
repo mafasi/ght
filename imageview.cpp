@@ -1,14 +1,8 @@
 #include "imageview.h"
 #include "ui_imageview.h"
 
-#include <QKeyEvent>
-#include <QFileDialog>
-#include <QString>
-#include <QPixmap>
-#include <QImage>
+#include "ghtalgorithm.h"
 #include "optionsview.h"
-#include <QDebug>
-#include <vector>
 
 
 ImageView::ImageView(QWidget *parent) :
@@ -42,7 +36,7 @@ void ImageView::keyPressEvent(QKeyEvent *event)
         _template = loadFileFromFileOpenDialog();
         viewImage(Panel::A, _template);
         break;
-    case Qt::Key_L:  // Load Image
+    case Qt::Key_I:  // Load Image
         _image = loadFileFromFileOpenDialog();
         viewImage(Panel::B, _image);
         break;
@@ -69,9 +63,9 @@ void ImageView::viewImageB(const cv::Mat& image)
 
 void ImageView::detect()
 {
-    Algorithm ght;
+    GHTAlgorithm ght;
     connect(&ght, SIGNAL(done(cv::Mat)), this, SLOT(viewImageB(cv::Mat)));
-    ght.setTemplate(_template);
+    ght.setTemplate(_template, cv::Point(41,107));
     ght.setParameters(_parameters);
     ght.setImage(_image);
     ght.detect();
@@ -79,7 +73,7 @@ void ImageView::detect()
 
 void ImageView::inParameter(int value, ParameterType type)
 {
-    std::for_each (_parameters.begin(), _parameters.end(), [type, value](DoubleParameter& parameter)
+    std::for_each (_parameters.begin(), _parameters.end(), [=](DoubleParameter& parameter)
     {
         if (std::get<Type>(parameter) == type)
             std::get<Default>(parameter) = value;
@@ -97,8 +91,8 @@ void ImageView::viewImage(Panel panel, const cv::Mat& mat)
         img = QImage (qImageBuffer, mat.cols, mat.rows, mat.step, QImage::Format_Indexed8);
     else if (mat.channels() == 3)
     {
-        img = QImage (qImageBuffer, mat.cols, mat.rows, mat.step, QImage::Format_RGB888);
-        img = img.rgbSwapped();
+        img = QImage (qImageBuffer, mat.cols, mat.rows, mat.step, QImage::Format_RGB888).rgbSwapped();
+        //img = img.rgbSwapped();
     }
     switch (panel)
     {

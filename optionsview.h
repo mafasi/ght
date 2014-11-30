@@ -1,9 +1,7 @@
 #ifndef GUI_H
 #define GUI_H
 
-#include <QWidget>
-
-#include "algorithm.h"
+#include "precomp.h"
 
 namespace Ui {
 class OptionsView;
@@ -25,12 +23,13 @@ public:
     void keyPressEvent(QKeyEvent *event);
 
 signals:
-    void out(std::vector<DoubleParameter> parameter);
+    //void out(std::vector<DoubleParameter> parameter);
+    void detect();
 
 
 private:
-    Ui::OptionsView*    ui;
     QObject*            _parent;
+    Ui::OptionsView*    _ui;
 };
 
 #endif // GUI_H

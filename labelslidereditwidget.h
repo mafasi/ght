@@ -1,9 +1,7 @@
 #ifndef LABELSLIDEREDITWIDGET_H
 #define LABELSLIDEREDITWIDGET_H
 
-#include <QWidget>
-
-#include "algorithm.h"
+#include "precomp.h"
 
 namespace Ui {
 class LabelSliderEditWidget;

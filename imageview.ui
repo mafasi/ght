@@ -58,7 +58,7 @@
       <item>
        <widget class="QLabel" name="label">
         <property name="text">
-         <string>[T] - Template / [L] -Load Image / [D] - Detect / [O] - Options / [ESC] - Quit</string>
+         <string>[T] - Template / [I] -Load Image / [D] - Detect / [O] - Options / [ESC] - Quit</string>
         </property>
        </widget>
       </item>
