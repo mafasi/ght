@@ -121,3 +121,4 @@ void GHTAlgorithm::calcEdges(cv::InputArray _src, cv::Mat& edges, cv::Mat& dx, c
     Sobel(src, dy, CV_32F, 0, 1);
 }
 
+

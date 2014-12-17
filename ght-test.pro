@@ -18,7 +18,8 @@ SOURCES += main.cpp \
     labelslidereditwidget.cpp \
     ghtalgorithm.cpp \
     imageview.cpp \
-    optionsview.cpp
+    optionsview.cpp \
+    rtable.cpp
 
 unix: CONFIG += link_pkgconfig
 unix: PKGCONFIG += opencv
@@ -32,6 +33,7 @@ HEADERS += \
     labelslidereditwidget.h \
     ghtalgorithm.h \
     imageview.h \
-    optionsview.h
+    optionsview.h \
+    rtable.h
 
 PRECOMPILED_HEADER = precomp.h

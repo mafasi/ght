@@ -6,6 +6,7 @@
 #include <tuple>
 #include <vector>
 #include <iostream>
+#include <map>
 
 #include <QWidget>
 #include <QObject>
